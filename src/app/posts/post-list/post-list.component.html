@@ -1,0 +1,18 @@
+<mat-accordion multi="ture" *ngIf="postsCreated.length > 0; else noPosts">
+    <mat-expansion-panel *ngFor="let post of postsCreated">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{post.title}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p> {{post.content}} </p>
+      <mat-action-row>
+        <button mat-button style="background-color: seagreen; color: white">Edit</button>
+        <button mat-button style="background-color: red; color: white">Delete</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #noPosts>
+  <p style="text-align: center">No posts added yet !</p>
+</ng-template>

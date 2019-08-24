@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Post } from './shared-classes-and-interfaces/post';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'hello-there-app';
+
+  // posts: Post[] = [];
+
+
+  // onPostCreated(post) {
+  //   this.posts.push(post);
+  // }
+
 }
