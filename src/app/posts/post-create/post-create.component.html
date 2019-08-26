@@ -1,12 +1,26 @@
-<form (submit)="onSavePost(postFrom)" #postFrom="ngForm">
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+
+<form (submit)="onSavePost(postFrom)" #postFrom="ngForm" *ngIf="!isLoading">
   <mat-card>
           <mat-form-field>
-            <input matInput placeholder="Title" type="text" name="title" [ngModel]="postToEdit?.title" #title="ngModel" required>
+            <input matInput
+                  placeholder="Title"
+                  type="text"
+                  name="title"
+                  [ngModel]="postToEdit?.title"
+                  #title="ngModel"
+                  required>
             <mat-error *ngIf="title.invalid"> Title is required!</mat-error>
           </mat-form-field>
 
           <mat-form-field>
-            <textarea matInput placeholder="Content" type="text" name="content" rows="4" [ngModel]="postToEdit?.content" #content="ngModel" required></textarea>
+            <textarea matInput
+                  placeholder="Content"
+                  type="text"
+                  name="content" rows="4"
+                  [ngModel]="postToEdit?.content"
+                  #content="ngModel"
+                  required></textarea>
             <mat-error *ngIf="content.invalid"> Content is required!</mat-error>
           </mat-form-field>
 
