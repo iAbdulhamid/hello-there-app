@@ -1,3 +1,11 @@
 <mat-toolbar style="margin-bottom: 1rem; background-color: seagreen; color: snow">
-  Hello There !
+  <span><a [routerLink]="['/']" routerLinkActive="router-link-active" >Hello There !</a></span>
+
+  <span class="spacer"></span>
+
+ <ul>
+    <li>
+      <a mat-button [routerLink]="['/create']" routerLinkActive="router-link-active">+ New Post</a>
+    </li>
+  </ul>
 </mat-toolbar>

@@ -36,6 +36,10 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
+  getPost(id: string) {
+    return this.http.get<{_id: string, title: string, content: string}>(`http://localhost:3000/posts/${id}`);
+  }
+
   addPost(post: Post) {
     this.http.post<{message: string, postId: string}>('http://localhost:3000/posts', post)
       .subscribe((response) => {
@@ -44,6 +48,18 @@ export class PostsService {
         post.id = generatedID;
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
+      });
+  }
+
+  updatePost(id: string, title: string, content: string) {
+    const updatedPost = {
+      id,
+      title,
+      content
+    };
+    this.http.put(`http://localhost:3000/posts/${id}`, updatedPost)
+      .subscribe(response => {
+        console.log(response);
       });
   }
 
