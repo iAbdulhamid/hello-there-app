@@ -3,10 +3,7 @@
 <form [formGroup]="form" (submit)="onSavePost()" *ngIf="!isLoading">
   <mat-card>
           <mat-form-field>
-            <input matInput
-                  placeholder="Title"
-                  type="text"
-                  formControlName="title">
+            <input matInput placeholder="Title" type="text" formControlName="title">
             <mat-error *ngIf="form.get('title').invalid"> Title is required!</mat-error>
           </mat-form-field>
 
@@ -15,11 +12,12 @@
             <input type="file" style="display: none" #imagePicker (change)="onImagePicked($event)">
           </div>
 
+          <div class="image-preview" *ngIf="imagePreview && imagePreview !== null && form.get('image').valid">
+            <img [src]="imagePreview" [alt]="form.value.title">
+          </div>
+
           <mat-form-field>
-            <textarea matInput
-                  placeholder="Content"
-                  rows="4"
-                  formControlName="content"></textarea>
+            <textarea matInput placeholder="Content" rows="4" formControlName="content"></textarea>
             <mat-error *ngIf="form.get('content').invalid"> Content is required!</mat-error>
           </mat-form-field>
 

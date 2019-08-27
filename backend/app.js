@@ -1,3 +1,4 @@
+const path       = require('path');
 const express    = require('express');
 const bodyParser = require('body-parser');
 const cors       = require('cors');
@@ -18,6 +19,8 @@ mongoose.connect("mongodb+srv://iks:hpzG0Crcclz87ARt@cluster0-gaanz.mongodb.net/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());
+// to allow the front end to access the images file:
+app.use('/images', express.static(path.join('backend/images')));
 
 app.use((req, res, next) => {
   // console.log('hello from express, first middleware');

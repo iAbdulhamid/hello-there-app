@@ -4,6 +4,8 @@ import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from 'src/app/services/posts.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
+import { mimeType } from './mime-type.validator';
+
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
@@ -15,10 +17,11 @@ export class PostCreateComponent implements OnInit {
   enteredContent = '';
   private mode = 'create';
   private postId: string;
-  postToEdit;
+  postToEdit: Post;
   isLoading = false;
   // 01: Using Reactive Forms instead of Template Driven Forms
   form: FormGroup;
+  imagePreview;
 
   constructor(private postsService: PostsService, private route: ActivatedRoute, private router: Router) { }
 
@@ -26,7 +29,7 @@ export class PostCreateComponent implements OnInit {
     // 02: Initialization of our Reactive form:
     this.form = new FormGroup({
       title:   new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
-      image:   new FormControl(null),
+      image:   new FormControl(null, { validators: [Validators.required], asyncValidators: [mimeType] }),
       content: new FormControl(null, { validators: [Validators.required] }),
     });
 
@@ -37,11 +40,17 @@ export class PostCreateComponent implements OnInit {
         this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe(post => {
           this.isLoading = false;
-          this.postToEdit = {id: post._id, title: post.title, content: post.content};
+          this.postToEdit = {
+            id: post._id,
+            title: post.title,
+            content: post.content,
+            imagePath: null
+          };
           // 03: setting the values of (the post will edit) into our reactivr form:
           this.form.setValue({
             title: this.postToEdit.title,
-            content: this.postToEdit.content
+            content: this.postToEdit.content,
+            imagePath: this.postToEdit.imagePath
           });
         });
 
@@ -57,6 +66,12 @@ export class PostCreateComponent implements OnInit {
     // Note: setValue(..for all input controls..) patchValue(..for specific control..)
     this.form.patchValue({ image: file });
     this.form.get('image').updateValueAndValidity();
+    //
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSavePost() {
@@ -64,14 +79,15 @@ export class PostCreateComponent implements OnInit {
       return;
     }
     this.isLoading = true;
-    const post = new Post(null, this.form.value.title, this.form.value.content);
+
     if (this.mode === 'create') {
-      this.postsService.addPost(post);
+      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
     } else {
       this.postsService.updatePost(
         this.postId,
         this.form.value.title,
-        this.form.value.content);
+        this.form.value.content,
+        this.form.value.image);
     }
     this.form.reset();
     this.router.navigate(['/']);

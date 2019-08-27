@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 })
 export class PostListComponent implements OnInit, OnDestroy {
 
-  // @Input() postsFromAppComponent: Post[] = [];
   postsCreated: Post[] = [];
   postsSub: Subscription;
   isLoading = false;
