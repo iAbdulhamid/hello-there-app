@@ -3,7 +3,7 @@
 <mat-accordion multi="ture" *ngIf="postsCreated.length > 0 && !isLoading">
     <mat-expansion-panel *ngFor="let post of postsCreated">
       <mat-expansion-panel-header>
-        <mat-panel-title>
+        <mat-panel-title style="font-size: 1.1rem; font-weight: bold">
           {{post.title}}
         </mat-panel-title>
       </mat-expansion-panel-header>
@@ -17,6 +17,13 @@
       </mat-action-row>
     </mat-expansion-panel>
 </mat-accordion>
+<br/>
+
+<mat-paginator *ngIf="postsCreated.length > 0"
+               [length]='totalPosts'
+               [pageSize]='postPerPage'
+               [pageSizeOptions]='pageSizeOptions'
+               (page)='onPageChanged($event)'></mat-paginator>
 
 <ng-template #noPosts *ngIf="postsCreated.length == 0">
   <p style="text-align: center">No posts added yet !</p>

@@ -30,10 +30,23 @@ const storage = multer.diskStorage({
 // 01: GET all posts:
 router.get('/posts', (req, res) => {
   // fetching all posts documents from (posts) collection => find()
-  Post.find().then(documents => {
+  const pageSize    = Number(req.query.pagesize);
+  const currentPage = Number(req.query.page);
+  const postQuery   = Post.find();
+  let fetchedPosts;
+
+  if(pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  postQuery.then(documents => {
+    fetchedPosts = documents;
+    return Post.count();
+  }).then(count => {
     res.status(200).json({
       message: 'Posts fetched successfully!',
-      data: documents,
+      data: fetchedPosts,
+      maxPosts: count
     });
   });
 });
@@ -93,7 +106,7 @@ router.delete('/posts/:id', (req, res) => {
   .then(res => {
     console.log(res);
     res.status(200).json({message: 'Post deleted!'});
-  });
+  }).catch((err)=>console.log(err));
 });
 
 module.exports = router;
