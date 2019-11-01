@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from 'src/app/shared-classes-and-interfaces/post';
 import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
-import { PostsService } from 'src/app/services/posts.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
+import { Post } from 'src/app/shared-classes-and-interfaces/post';
+import { PostsService } from 'src/app/services/posts.service';
 import { mimeType } from './mime-type.validator';
 
 @Component({
@@ -23,14 +23,16 @@ export class PostCreateComponent implements OnInit {
   form: FormGroup;
   imagePreview;
 
-  constructor(private postsService: PostsService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private postsService: PostsService,
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   ngOnInit() {
     // 02: Initialization of our Reactive form:
     this.form = new FormGroup({
-      title:   new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
-      image:   new FormControl(null, { validators: [Validators.required], asyncValidators: [mimeType] }),
-      content: new FormControl(null, { validators: [Validators.required] }),
+      title:    new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
+      image:    new FormControl(null, { validators: [Validators.required], asyncValidators: [mimeType] }),
+      content:  new FormControl(null, { validators: [Validators.required] }),
     });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -38,6 +40,7 @@ export class PostCreateComponent implements OnInit {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
         this.isLoading = true;
+
         this.postsService.getPost(this.postId).subscribe(post => {
           this.isLoading = false;
           this.postToEdit = {
@@ -66,9 +69,9 @@ export class PostCreateComponent implements OnInit {
     // Note: setValue(..for all input controls..) patchValue(..for specific control..)
     this.form.patchValue({ image: file });
     this.form.get('image').updateValueAndValidity();
-    //
+    // I need to READ the image to DISPLAY it ...
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = () => { // when READING image is DONE ..
       this.imagePreview = reader.result;
     };
     reader.readAsDataURL(file);

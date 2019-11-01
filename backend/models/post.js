@@ -7,3 +7,5 @@ const postSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('Post', postSchema);
+
+// Note: If you named you model Post => the MongoDB collection name wil be: Posts

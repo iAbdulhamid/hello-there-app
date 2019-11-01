@@ -19,20 +19,21 @@ export class PostsService {
     const queryParams = `?pagesize=${postsperPage}&page=${currentPage}`;
 
     this.http.get<{ message: string, data: any, maxPosts: number }>(`http://localhost:3000/posts${queryParams}`)
-      .pipe(map(postData => {
+      // pipe(): allows  us to add and use operators from 'rxjs/operators'
+      .pipe(map(postData => { // postData.data => Post[]
         return {
           posts: postData.data.map(post => {
           return {
-            id: post._id,
+            id: post._id, // our Post model has id, BUT mongoDB returns to us _id => we need to transfer it before .subscribe()
             title: post.title,
             content: post.content,
             imagePath: post.imagePath
           };
         }), maxPosts: postData.maxPosts };
       }))
-      .subscribe(data => {
-        this.posts = data.posts;
-        this.postsUpdated.next({ posts: [...this.posts], postsCount: data.maxPosts });
+      .subscribe(transformedData => {
+        this.posts = transformedData.posts;
+        this.postsUpdated.next({ posts: [...this.posts], postsCount: transformedData.maxPosts });
       });
   }
 
@@ -41,7 +42,8 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{_id: string, title: string, content: string}>(`http://localhost:3000/posts/${id}`);
+    return this.http
+      .get<{_id: string, title: string, content: string}>(`http://localhost:3000/posts/${id}`);
   }
 
   addPost(title: string, content: string, image: File) {

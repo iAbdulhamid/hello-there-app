@@ -1,11 +1,17 @@
 <mat-toolbar style="margin-bottom: 1rem; background-color: seagreen; color: snow">
-  <span><a [routerLink]="['/']" routerLinkActive="router-link-active" >Hello There !</a></span>
+  <span><a [routerLink]="['/']" routerLinkActive="router-link-active" >Hello There!</a></span>
 
   <span class="spacer"></span>
 
- <ul>
+  <ul>
     <li>
-      <a mat-button [routerLink]="['/create']" routerLinkActive="router-link-active">+ New Post</a>
+      <a mat-button [routerLink]="['/create']" routerLinkActive="mat-accent">+ New Post</a>
+    </li>
+    <li>
+      <a mat-button [routerLink]="['/login']" routerLinkActive="router-link-active">Login</a>
+    </li>
+    <li>
+      <a mat-button [routerLink]="['/signup']" routerLinkActive="router-link-active">Signup</a>
     </li>
   </ul>
 </mat-toolbar>

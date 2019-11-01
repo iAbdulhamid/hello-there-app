@@ -1,5 +1,5 @@
 const express = require('express');
-const multer  = require('multer');
+const multer  = require('multer'); // allows us to extract the incoming files: by attaching it to certian routes that shoud be able to accept files..
 
 const Post = require('../models/post');
 
@@ -11,6 +11,8 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg"
 };
 
+// WHERE multer should put files which it detects in the incoming requests?
+// multer.diskStorage({ destination, filename});
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const isValid = MIME_TYPE_MAP[file.mimetype];
@@ -41,7 +43,7 @@ router.get('/posts', (req, res) => {
 
   postQuery.then(documents => {
     fetchedPosts = documents;
-    return Post.count();
+    return Post.countDocuments();
   }).then(count => {
     res.status(200).json({
       message: 'Posts fetched successfully!',
@@ -70,7 +72,7 @@ router.post('/posts', multer({storage: storage}).single('image'), (req, res) => 
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
-    imagePath: url + '/images' + req.file.fieldname
+    imagePath: url + '/images/' + req.file.filename
   });
   post.save().then(createdPost => {
     res.status(201).json({
@@ -106,7 +108,8 @@ router.delete('/posts/:id', (req, res) => {
   .then(res => {
     console.log(res);
     res.status(200).json({message: 'Post deleted!'});
-  }).catch((err)=>console.log(err));
+  })
+  .catch((err)=>console.log(err));
 });
 
 module.exports = router;
